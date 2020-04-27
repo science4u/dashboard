@@ -12,8 +12,8 @@ output:
 ```{r setup, include=FALSE}
 #------------------ Packages ------------------
 library(flexdashboard)
+library(dplyr)
 library(lubridate)
-library (dplyr)
 
 #checks if there is data update on the Github version
 #coronavirus::update_datasets(silence = TRUE)
@@ -33,8 +33,6 @@ confirmed_color <- "purple"
 active_color <- "#1f77b4"
 recovered_color <- "forestgreen"
 death_color <- "red"
-incidence_color <- "#DC143C"
-
 #------------------ Data ------------------
 df <- coronavirus %>%
   # dplyr::filter(date == max(date)) %>%
@@ -131,8 +129,7 @@ Row
 ### **Daily cumulative cases by type** (Portugal only)
     
 ```{r}
-#select only dates we want for Portugal
-df_daily%>%select(date,confirmed_cum,death_cum)%>%filter(date >= as.Date(ymd("2020-03-01")))%>%mutate(date,confirmed_cum,death_cum)->df_daily2
+df_daily%>%select(date,confirmed_cum, death_cum)%>%filter(date >= as.Date(ymd("2020-03-01")))%>%mutate(date,confirmed_cum, death_cum)->df_daily2
 
 plotly::plot_ly(data = df_daily2) %>%
   plotly::add_trace(
@@ -209,13 +206,15 @@ plotly::plot_ly(data = df_daily2) %>%
 
 ### **Incidence (number of new cases)** (Portugal only)
     
-```{r}
-#select only dates we want for Portugal
+```{r, echo=FALSE}
+library(lubridate)
+library (dplyr)
+library(lubridate)
+library (dplyr)
+
 df_daily%>%select(date,confirmed)%>%filter(date >= as.Date(ymd("2020-03-01")))%>%mutate(date,confirmed)->df_daily2
 
 plotly::plot_ly(data = df_daily2)%>%
-
-
 
   plotly::add_bars(
     
@@ -227,8 +226,8 @@ plotly::plot_ly(data = df_daily2)%>%
     mode = "lines+markers",
     # name = "Active",
     name = "Confirmed",
-    line = list(color = incidence_color),
-    marker = list(color = incidence_color)
+    line = list(color = confirmed_color),
+    marker = list(color = confirmed_color)
   ) %>%
   
   plotly::layout(
